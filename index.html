@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantinho dos Criativos - Ferramentas Úteis</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --button: #2563eb;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 { color: var(--accent); margin-bottom: 5px; }
+        .card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        input {
+            width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: var(--button);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { opacity: 0.9; }
+        footer {
+            margin-top: auto;
+            padding-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Cantinho dos Criativos</h1>
+        <p>Hub de Utilitários e Ferramentas para Criadores de Conteúdo</p>
+    </header>
+
+    <div class="card">
+        <h2>Visualizador de Mídias do Instagram</h2>
+        <p>Digite o @ do usuário para buscar publicações e stories públicos:</p>
+        <input type="text" id="username" placeholder="@usuario">
+        <br>
+        <button onclick="buscarMedia()">Buscar Mídia</button>
+        <div id="resultado" style="margin-top: 20px;"></div>
+    </div>
+
+    <footer>
+        <p>Desenvolvido por <strong>Wagner Dom</strong> | Canal <a href="https://youtube.com/@cantinhodoscriativos" target="_blank">@cantinhodoscriativos</a></p>
+        <p>Conheça também a <a href="https://editoracriativa.net" target="_blank">Editora Criativa</a></p>
+    </footer>
+
+    <script>
+        async function buscarMedia() {
+            const user = document.getElementById('username').value.replace('@', '').trim();
+            const resDiv = document.getElementById('resultado');
+            
+            if(!user) {
+                resDiv.innerHTML = '<p style="color: #ef4444;">Por favor, digite um usuário válido.</p>';
+                return;
+            }
+
+            resDiv.innerHTML = '<p>Buscando mídias...</p>';
+
+            try {
+                const response = await fetch(`/api/stories?username=${user}`);
+                const data = await response.json();
+
+                if(data.error) {
+                    resDiv.innerHTML = `<p style="color: #ef4444;">${data.error}</p>`;
+                } else {
+                    resDiv.innerHTML = `<p style="color: #22c55e;">Mídia encontrada para @${user}!</p>`;
+                }
+            } catch (e) {
+                resDiv.innerHTML = '<p style="color: #ef4444;">Erro ao conectar com o servidor.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
